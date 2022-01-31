@@ -1,0 +1,22 @@
+#!/bin/bash
+#
+cd /datadisk/database_backup/
+name=bugzillaapp_DB
+if [[ -e $name.sql || -L $name.sql ]] ; then
+    i=0
+    while [[ -e $name-$i.sql || -L $name-$i.sql ]] ; do
+        let i++
+    done
+    name=$name-$i
+fi
+mysqldump -u appzillon -pDBXpro@2011 --databases bugzillaapp_DB > /datadisk/database_backup/"$name".sql
+reverse=backup
+if [[ -e $reverse.tar.gz || -L $reverse.tar.gz ]] ; then
+    i=0
+    while [[ -e $reverse-$i.tar.gz || -L $reverse-$i.tar.gz ]] ; do
+        let i++
+    done
+    reverse=$reverse-$i
+fi
+tar -czvf "$reverse".tar.gz "$name".sql
+rm -rf "$name".sql
